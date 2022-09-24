@@ -2,6 +2,8 @@ package main_test
 
 import (
 	"log"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"testing"
 
@@ -39,6 +41,34 @@ func clearTable() {
 	a.DB.Exec("ALTER SEQUENCE product_id_seq RESTART WITH 1")
 }
 
+func TestEmptyTable(t *testing.T) {
+	clearTable()
+
+	req, _ := http.NewRequest("GET", "/products", nil)
+	response := executeRequest(req)
+
+	checkReponseCode(t, http.StatusOK, response.Code)
+
+	if body := response.Body.String(); body != "[]" {
+		t.Errorf("salah harusnya array kosong malah dapet %s", body)
+	}
+}
+
+func executeRequest(req *http.Request) *httptest.ResponseRecorder {
+	rr := httptest.NewRecorder()
+	a.Router.ServeHTTP(rr, req)
+
+	return rr
+}
+
+func checkReponseCode(t *testing.T, expected, actual int) {
+	if expected != actual {
+		t.Errorf("salah, harusnya %d malah dapet %d\n", expected, actual)
+	}
+}
+
+
+
 const tableCreationQuery = `CREATE TABLE IF NOT EXISTS products
 (
     id SERIAL,
@@ -46,3 +76,5 @@ const tableCreationQuery = `CREATE TABLE IF NOT EXISTS products
     price NUMERIC(10,2) NOT NULL DEFAULT 0.00,
     CONSTRAINT products_pkey PRIMARY KEY (id)
 )`
+
+
