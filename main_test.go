@@ -5,14 +5,19 @@ import (
 	"os"
 	"testing"
 
-	_ "github.com/cigetbudi/go-mux"
+	"github.com/cigetbudi/go-mux"
+	"github.com/joho/godotenv"
 )
 
 var a main.App
 
 func TestMain(m *testing.M) {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Gagal baca .env")
+	}
 	a.Initialize(
-		os.Getenv("App_DB_USERNAME"),
+		os.Getenv("APP_DB_USERNAME"),
 		os.Getenv("APP_DB_PASSWORD"),
 		os.Getenv("APP_DB_NAME"))
 
