@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"log"
 
 	"net/http"
@@ -84,8 +83,6 @@ func TestCreateProduct(t *testing.T) {
 
 	var m map[string]interface{}
 	json.Unmarshal(response.Body.Bytes(), &m)
-
-	fmt.Println(string(response.Body.Bytes()))
 
 	if m["name"] != "test produk" {
 		t.Errorf("harusnya namanya 'test produk'  malah dapet '%v'", m["name"])
