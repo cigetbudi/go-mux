@@ -1,6 +1,9 @@
-package main_test
+package main
 
 import (
+	"bytes"
+	"encoding/json"
+	"fmt"
 	"log"
 
 	"net/http"
@@ -8,11 +11,10 @@ import (
 	"os"
 	"testing"
 
-	"github.com/cigetbudi/go-mux"
 	"github.com/joho/godotenv"
 )
 
-var a main.App
+var a App
 
 func TestMain(m *testing.M) {
 	err := godotenv.Load()
@@ -42,61 +44,61 @@ func clearTable() {
 	a.DB.Exec("ALTER SEQUENCE product_id_seq RESTART WITH 1")
 }
 
-// func TestEmptyTable(t *testing.T) {
-// 	clearTable()
+func TestEmptyTable(t *testing.T) {
+	clearTable()
 
-// 	req, _ := http.NewRequest("GET", "/products", nil)
-// 	response := executeRequest(req)
+	req, _ := http.NewRequest("GET", "/products", nil)
+	response := executeRequest(req)
 
-// 	checkReponseCode(t, http.StatusOK, response.Code)
+	checkReponseCode(t, http.StatusOK, response.Code)
 
-// 	if body := response.Body.String(); body != "[]" {
-// 		t.Errorf("salah harusnya array kosong malah dapet %s", body)
-// 	}
-// }
+	if body := response.Body.String(); body != "[]" {
+		t.Errorf("salah harusnya array kosong malah dapet %s", body)
+	}
+}
 
-// func TestNAProduct(t *testing.T) {
-// 	clearTable()
+func TestNAProduct(t *testing.T) {
+	clearTable()
 
-// 	req,_ := http.NewRequest("GET", "/product/11",nil)
-// 	response := executeRequest(req)
+	req, _ := http.NewRequest("GET", "/product/11", nil)
+	response := executeRequest(req)
 
-// 	checkReponseCode(t, http.StatusNotFound, response.Code)
+	checkReponseCode(t, http.StatusNotFound, response.Code)
 
-// 	var m map[string]string
-// 	json.Unmarshal(response.Body.Bytes(), &m)
-// 	if m["error"] != "Product not found" {
-// 		t.Errorf("harusnya dapet 'error' jadi 'Product not found' malah dapet '%s'", m["error"])
-// 	}
-// }
+	var m map[string]string
+	json.Unmarshal(response.Body.Bytes(), &m)
+	if m["error"] != "Product not found" {
+		t.Errorf("harusnya dapet 'error' jadi 'Product not found' malah dapet '%s'", m["error"])
+	}
+}
 
-// func TestCreateProduct(t *testing.T) {
-// 	clearTable()
+func TestCreateProduct(t *testing.T) {
+	clearTable()
 
-// 	var jsonStr = []byte(`{"name":"test produk", "price": 11.22}`)
-// 	req, _ := http.NewRequest("POST", "/product", bytes.NewBuffer(jsonStr))
-// 	req.Header.Set("Content-Type", "application/json")
+	var jsonStr = []byte(`{"name":"test produk", "price": 11.22}`)
+	req, _ := http.NewRequest("POST", "/product", bytes.NewBuffer(jsonStr))
+	req.Header.Set("Content-Type", "application/json")
 
-// 	response := executeRequest(req)
-// 	checkReponseCode(t, http.StatusCreated, response.Code)
+	response := executeRequest(req)
+	checkReponseCode(t, http.StatusCreated, response.Code)
 
-// 	var m map[string]interface{}
-// 	json.Unmarshal(response.Body.Bytes(), &m)
+	var m map[string]interface{}
+	json.Unmarshal(response.Body.Bytes(), &m)
 
-// 	fmt.Println(string(response.Body.Bytes()))
+	fmt.Println(string(response.Body.Bytes()))
 
-// 	if m["name"] != "test produk" {
-// 		t.Errorf("harusnya namanya 'test produk'  malah dapet '%v'", m["name"])
-// 	}
+	if m["name"] != "test produk" {
+		t.Errorf("harusnya namanya 'test produk'  malah dapet '%v'", m["name"])
+	}
 
-// 	if m["price"] != 11.22 {
-// 		t.Errorf("harusnya '11.2' malah dapet '%v'", m["price"])
-// 	}
+	if m["price"] != 11.22 {
+		t.Errorf("harusnya '11.2' malah dapet '%v'", m["price"])
+	}
 
-// 	if m["id"] != 1.0 {
-//         t.Errorf("Expected product ID to be '1'. Got '%v'", m["id"])
-//     }
-// }
+	if m["id"] != 1.0 {
+		t.Errorf("Expected product ID to be '1'. Got '%v'", m["id"])
+	}
+}
 
 func TestGetProduct(t *testing.T) {
 	clearTable()
