@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/cigetbudi/go-mux/handlers"
 	"github.com/joho/godotenv"
 )
 
@@ -12,7 +13,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Gagal baca .env")
 	}
-	a := App{}
+	a := handlers.App{}
 	a.Initialize(
 		os.Getenv("APP_DB_USERNAME"),
 		os.Getenv("APP_DB_PASSWORD"),

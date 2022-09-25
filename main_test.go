@@ -10,10 +10,11 @@ import (
 	"os"
 	"testing"
 
+	"github.com/cigetbudi/go-mux/handlers"
 	"github.com/joho/godotenv"
 )
 
-var a App
+var a handlers.App
 
 func TestMain(m *testing.M) {
 	err := godotenv.Load()
